@@ -3,9 +3,9 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: GUGUBIRD的个人网站
-subtitle: '小镇做题家'
-description: ''
+title: GuGuBird
+subtitle: 'butterfly'
+description: '智勇还需努力'
 keywords:
 author: gugubird
 language: zh-CN
@@ -103,3 +103,7 @@ theme: butterfly
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
   type: ''
+
+markdown:
+    plugins:
+      - '@renbaoshuo/markdown-it-katex'
