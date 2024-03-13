@@ -102,7 +102,9 @@ theme: butterfly
 # Deployment
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
-  type: ''
+  type: 'git'
+  repo: https://github.com/gugubird13/gugubird13.github.io.git
+  branch: master
 
 markdown:
     plugins:
