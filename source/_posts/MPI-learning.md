@@ -4,11 +4,12 @@ date: 2024-03-13 21:31:23
 tags: MPI
 categories: learning
 top_img: blue
+comments: false
 ---
 
 # **HPC 学习资源**
 
-开放编辑 😡
+不开放编辑 😡
 
 # **课程**
 
