@@ -3,8 +3,8 @@ title: 性能优化学习笔记1
 date: 2024-03-14 15:30:17
 tags: performance_engineering
 categories: learning
-description: 这是关于对我父亲年轻时候的回忆
-keywords: 亲情、父亲
+description: 性能优化学习笔记
+keywords: 性能优化
 top_img: https://s2.loli.net/2024/03/14/WQxHO96fkU5RJSe.jpg
 cover: 
 comments: false
@@ -64,7 +64,7 @@ $$
 
 如果单纯对于改矩阵进行运算，那么运算次数就是 $ 2n^3 $ 的计算次数，为了简单起见，我们假设，n 是 2 的精确幂，即： $n=2^k$ 
 
-<img src="D:\Some_files\文章记录\性能优化学习\png1.png" alt="image-20240321104646577" style="zoom: 33%;" />
+<img src="https://s2.loli.net/2024/03/21/ZQNsFBXD9th1diY.png" alt="image-20240321104646577" style="zoom: 33%;" />
 
 这里是某个e5神教的CPU，这里是某个计算性能的计算机，根据表中数据可以计算出对应的FLOPS参数，可见其峰值为 836GFLOPS
 
@@ -123,7 +123,7 @@ $$
 
 下图就是python在运行的时候解释器的状态
 
-<img src="C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20240321113343771.png" alt="image-20240321113343771" style="zoom: 67%;" />
+<img src="https://s2.loli.net/2024/03/21/SJgeo2iZY1G9Bc5.png" alt="image-20240321113343771" style="zoom: 67%;" />
 
 ## 优化代码结构
 
@@ -162,21 +162,21 @@ for(intk=0;k<n; ++k){
 | **k,i,j**                  | **179.21**       |
 | **k,j,i**                  | **3032.82**      |
 
-**所以为什么会发生如此大的影响？**😐
+**所以为什么会发生如此大的影响？** 😐
 
 ## Cache Localities
 
 我们考虑矩阵在计算机内存中的存储结构：
 
-<img src="C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20240321143211726.png" alt="image-20240321143211726" style="zoom: 50%;" />
+<img src="https://s2.loli.net/2024/03/21/vGdRptDJxs36yNu.png" alt="image-20240321143211726" style="zoom: 50%;" />
 
 矩阵是按照行的优先顺序排列在内存中，因此矩阵是根据内存的线性布局，也就是把row1、row2、row3线性展开如上图在memory中的表示。那么，对于不同的循环顺序，其in-memory访问下的locality如下所示：
 
-<img src="C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20240321143647395.png" alt="image-20240321143647395" style="zoom:50%;" />
+<img src="https://s2.loli.net/2024/03/21/PWL7Rzht2VHsXYk.png" alt="image-20240321143647395" style="zoom:50%;" />
 
 对于这种循环顺序，可知B的局部性很差，因此访问时间比较长，cache命中率很低，因此访问时间就长了，而对于下图这种顺序，效果就很好
 
-<img src="C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20240321143820249.png" alt="image-20240321143820249" style="zoom:50%;" />
+<img src="https://s2.loli.net/2024/03/21/BjrzO3MhonYqFSy.png" alt="image-20240321143820249" style="zoom:50%;" />
 
 好的，现在我们的表格得更新一下，可以看见，提升很大，但是距离到达峰值还是很遥远！💀
 
@@ -191,7 +191,7 @@ for(intk=0;k<n; ++k){
 
 如果你对于编译器有一些了解，比如Clang的编译器，它提供了一组优化的开关，在编译的时候指定 -o 后面接数字即可，如下图所示
 
-![image-20240321144403189](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20240321144403189.png)
+![image-20240321144403189](https://s2.loli.net/2024/03/21/uoWTktqSAp8iz42.png)
 
 ## Multicore Parallelism
 
@@ -217,7 +217,7 @@ cilk_for(inti=0;i<n; ++i)
 
 同时，我们看是否使用方法3效果要比方法1好？
 
-<img src="C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20240321151913975.png" alt="image-20240321151913975" style="zoom:50%;" />
+<img src="https://s2.loli.net/2024/03/21/mZFGMhCSnvfbW3X.png" alt="image-20240321151913975" style="zoom:50%;" />
 
 很明显，仅仅优化i效果是最好的，这涉及到操作系统的调度开销，因此我们有了这个对于循环并行优化的法则：
 
@@ -240,13 +240,13 @@ cilk_for(inti=0;i<n; ++i)
 
 可以从上面的表看见，尽管我们做了如此多的优化，我们仅仅只是达到了peak的百分之5左右，很小很小，那么我们除了在编译、调度、代码这些方面做优化，我们还能在哪些方面优化？我们可以对于缓存命中做一些管理
 
-<img src="C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20240321161123028.png" alt="image-20240321161123028" style="zoom:50%;" />
+<img src="https://s2.loli.net/2024/03/21/IjnABfpLcqkG7hl.png" alt="image-20240321161123028" style="zoom:50%;" />
 
 例如如果我计算C的一行，我需要访问A的一行还有B的所有，那么需要上述的访问次数，很大，接近1700万次的内存访问！那么，如果我不是这样一行一行去计算，而是我使用block的概念去计算会发生什么呢？
 
 我们每次使用64*64的block去计算，那么结果如下：
 
-<img src="C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20240321161730424.png" alt="image-20240321161730424" style="zoom:50%;" />
+<img src="https://s2.loli.net/2024/03/21/GI1T2k5AmcO4ZrC.png" alt="image-20240321161730424" style="zoom:50%;" />
 
 这样，只需要50万次的访存！很神奇，学到这里感觉很多东西都是相通的，甚至后面的课程里面有算法优化，引入了shortcut的概念，让我立马想到了resnet😕。这个缓存管理告诉了我们，如果我们的block设计更适合Cache的话，会使得速度快很多！
 
