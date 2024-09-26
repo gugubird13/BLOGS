@@ -5,6 +5,14 @@
       link: https://hexo.io/zh-tw/
       avatar: https://d33wubrfki0l68.cloudfront.net/6657ba50e702d84afb32fe846bed54fba1a77add/827ae/logo.svg
       descr: 快速、简单且强大的网志框架
+    - name: Yintel
+      link: https://blog.yintel.top/
+      avatar: https://s2.loli.net/2024/04/01/fDeTbtKwu5yWNZm.jpg
+      descr: 师兄的博客！！！！！！！！！！！
+    - name: Hershel
+      link: https://Hershel1215.github.io
+      avatar: https://pic-yin.oss-cn-hangzhou.aliyuncs.com/b48e4a485892e9d8f210c0b1eee2723.jpg
+      descr: 贺博的博客！！！！！！！！！！
 
 - class_name: 网站
   class_desc: 值得推荐的网站
@@ -21,5 +29,5 @@
       link: https://twitter.com/
       avatar: https://i.loli.net/2020/05/14/5VyHPQqR6LWF39a.png
       descr: 社交分享平台
-
+    
 
